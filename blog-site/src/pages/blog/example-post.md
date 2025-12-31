@@ -30,7 +30,7 @@ tags: ["Tag1", "Tag2"]
 
 You can use all standard Markdown:
 
-- **Bold text** and *italic text*
+- **Bold text** and _italic text_
 - [Links](https://example.com)
 - `inline code`
 - Lists (like this one)
