@@ -1,0 +1,193 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PostCard from '../../components/PostCard.astro';
+
+const posts = await Astro.glob('./*.md');
+const sortedPosts = posts.sort((a, b) => 
+  new Date(b.frontmatter.pubDate).getTime() - new Date(a.frontmatter.pubDate).getTime()
+);
+
+const allTags = [...new Set(posts.flatMap(post => post.frontmatter.tags))].sort();
+---
+
+<BaseLayout title="Blog" description="Technical articles on cloud architecture, DevOps, programming, and technology.">
+  <section class="blog-page">
+    <div class="container">
+      
+      <header class="page-header animate-in">
+        <h1>Blog</h1>
+        <p>Technical writeups, tutorials, and notes on cloud infrastructure, programming, and DevOps.</p>
+      </header>
+
+      <div class="blog-layout">
+        <main class="blog-main">
+          {sortedPosts.length > 0 ? (
+            <div class="posts-list">
+              {sortedPosts.map((post) => (
+                <PostCard 
+                  title={post.frontmatter.title}
+                  description={post.frontmatter.description}
+                  pubDate={new Date(post.frontmatter.pubDate)}
+                  tags={post.frontmatter.tags}
+                  slug={post.file.split('/').pop()?.replace('.md', '') || ''}
+                />
+              ))}
+            </div>
+          ) : (
+            <p class="no-posts">No posts yet. Add markdown files to <code>src/pages/blog/</code> to get started.</p>
+          )}
+        </main>
+
+        <aside class="blog-sidebar">
+          {allTags.length > 0 && (
+            <div class="sidebar-section">
+              <h3>Topics</h3>
+              <div class="tag-list">
+                {allTags.map((tag) => (
+                  <a href={`/blog?tag=${tag.toLowerCase()}`} class="sidebar-tag">{tag}</a>
+                ))}
+              </div>
+            </div>
+          )}
+
+          <div class="sidebar-section">
+            <h3>Subscribe</h3>
+            <p>Get updates when I publish new articles.</p>
+            <a href="/rss.xml" class="rss-link">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M6.18 15.64a2.18 2.18 0 0 1 2.18 2.18C8.36 19 7.38 20 6.18 20C5 20 4 19 4 17.82a2.18 2.18 0 0 1 2.18-2.18M4 4.44A15.56 15.56 0 0 1 19.56 20h-2.83A12.73 12.73 0 0 0 4 7.27V4.44m0 5.66a9.9 9.9 0 0 1 9.9 9.9h-2.83A7.07 7.07 0 0 0 4 12.93V10.1z"/>
+              </svg>
+              RSS Feed
+            </a>
+          </div>
+        </aside>
+      </div>
+
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .blog-page {
+    padding: var(--space-3xl) 0;
+  }
+
+  .page-header {
+    margin-bottom: var(--space-2xl);
+  }
+
+  .page-header h1 {
+    margin-bottom: var(--space-sm);
+  }
+
+  .page-header p {
+    font-size: clamp(0.9375rem, 2vw, 1.0625rem);
+    color: var(--color-text-secondary);
+    max-width: 540px;
+    margin: 0;
+  }
+
+  .blog-layout {
+    display: grid;
+    grid-template-columns: 1fr 220px;
+    gap: var(--space-3xl);
+    align-items: start;
+  }
+
+  .blog-main {
+    min-width: 0;
+  }
+
+  .no-posts {
+    color: var(--color-text-muted);
+  }
+
+  /* Sidebar */
+  .blog-sidebar {
+    position: sticky;
+    top: calc(var(--header-height) + var(--space-xl));
+  }
+
+  .sidebar-section {
+    margin-bottom: var(--space-xl);
+  }
+
+  .sidebar-section h3 {
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--color-text-muted);
+    margin-bottom: var(--space-md);
+  }
+
+  .sidebar-section p {
+    font-size: 0.875rem;
+    color: var(--color-text-muted);
+    margin-bottom: var(--space-md);
+  }
+
+  .tag-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-xs);
+  }
+
+  .sidebar-tag {
+    font-size: 0.8125rem;
+    color: var(--color-text-secondary);
+    padding: var(--space-xs) var(--space-sm);
+    background: var(--color-bg-secondary);
+    border-radius: var(--radius-sm);
+    transition: all var(--transition-fast);
+  }
+
+  .sidebar-tag:hover {
+    color: var(--color-accent);
+    background: var(--color-accent-subtle);
+  }
+
+  .rss-link {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-sm);
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--color-text-secondary);
+    padding: var(--space-sm) var(--space-md);
+    background: var(--color-bg-secondary);
+    border-radius: var(--radius-md);
+    transition: all var(--transition-fast);
+  }
+
+  .rss-link:hover {
+    color: var(--color-accent);
+    background: var(--color-accent-subtle);
+  }
+
+  @media (max-width: 768px) {
+    .blog-page {
+      padding: var(--space-2xl) 0;
+    }
+
+    .blog-layout {
+      grid-template-columns: 1fr;
+      gap: var(--space-2xl);
+    }
+
+    .blog-sidebar {
+      position: static;
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-xl);
+      padding-top: var(--space-xl);
+      border-top: 1px solid var(--color-border);
+    }
+
+    .sidebar-section {
+      margin-bottom: 0;
+      flex: 1;
+      min-width: 200px;
+    }
+  }
+</style>

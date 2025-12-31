@@ -1,0 +1,120 @@
+---
+interface Props {
+  title: string;
+  description: string;
+  pubDate: Date;
+  tags: string[];
+  slug: string;
+  readingTime?: string;
+}
+
+const { title, description, pubDate, tags, slug, readingTime = "5 min" } = Astro.props;
+
+const formattedDate = pubDate.toLocaleDateString('en-US', {
+  year: 'numeric',
+  month: 'short',
+  day: 'numeric'
+});
+
+const tagStyles: Record<string, string> = {
+  cloud: 'tag--cloud',
+  aws: 'tag--cloud',
+  azure: 'tag--cloud',
+  gcp: 'tag--cloud',
+  kubernetes: 'tag--cloud',
+  terraform: 'tag--cloud',
+  devops: 'tag--devops',
+  'github actions': 'tag--devops',
+  ci: 'tag--devops',
+  programming: 'tag--code',
+  python: 'tag--code',
+  go: 'tag--code',
+  typescript: 'tag--code',
+};
+---
+
+<article class="post-card">
+  <a href={`/blog/${slug}`} class="post-link">
+    <div class="post-meta">
+      <time datetime={pubDate.toISOString()}>{formattedDate}</time>
+      <span class="separator">·</span>
+      <span>{readingTime}</span>
+    </div>
+    
+    <h3 class="post-title">{title}</h3>
+    <p class="post-description">{description}</p>
+    
+    <div class="post-tags">
+      {tags.slice(0, 3).map((tag) => (
+        <span class:list={['tag', tagStyles[tag.toLowerCase()] || '']}>
+          {tag}
+        </span>
+      ))}
+    </div>
+  </a>
+</article>
+
+<style>
+  .post-card {
+    padding: var(--space-lg) 0;
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .post-card:first-child {
+    padding-top: 0;
+  }
+
+  .post-card:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+  }
+
+  .post-link {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+  }
+
+  .post-meta {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--color-text-muted);
+    margin-bottom: var(--space-sm);
+  }
+
+  .separator {
+    opacity: 0.5;
+  }
+
+  .post-title {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: var(--color-text-primary);
+    margin-bottom: var(--space-sm);
+    transition: color var(--transition-fast);
+  }
+
+  .post-link:hover .post-title {
+    color: var(--color-accent);
+  }
+
+  .post-description {
+    font-size: 0.9375rem;
+    color: var(--color-text-secondary);
+    line-height: 1.6;
+    margin: 0 0 var(--space-md) 0;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .post-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-xs);
+  }
+</style>

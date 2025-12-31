@@ -1,0 +1,59 @@
+---
+layout: ../../layouts/BlogPostLayout.astro
+title: "Your First Blog Post"
+description: "A brief description of what this post is about. Keep it under 160 characters for SEO."
+pubDate: 2025-01-20
+tags: ["Cloud", "Tutorial"]
+---
+
+This is where your blog post content goes. Write in plain Markdown.
+
+## How to Write Posts
+
+Create a new `.md` file in `src/pages/blog/`. The filename becomes the URL slug. For example, `my-new-post.md` becomes `/blog/my-new-post`.
+
+## Frontmatter
+
+Every post needs this metadata at the top:
+
+```yaml
+---
+layout: ../../layouts/BlogPostLayout.astro
+title: "Post Title"
+description: "Brief description"
+pubDate: 2025-01-20
+tags: ["Tag1", "Tag2"]
+---
+```
+
+## Markdown Features
+
+You can use all standard Markdown:
+
+- **Bold text** and *italic text*
+- [Links](https://example.com)
+- `inline code`
+- Lists (like this one)
+
+### Code Blocks
+
+```python
+def hello():
+    print("Hello, world!")
+```
+
+### Blockquotes
+
+> This is a blockquote. Use it for callouts or quotes.
+
+### Images
+
+Place images in `public/images/` and reference them:
+
+```markdown
+![Alt text](/images/my-image.png)
+```
+
+---
+
+Delete this template and start writing your own posts!

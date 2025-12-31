@@ -1,0 +1,86 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import ProjectCard from '../../components/ProjectCard.astro';
+
+const projects = await Astro.glob('./*.md');
+const sortedProjects = projects.sort((a, b) => {
+  const dateA = a.frontmatter.date ? new Date(a.frontmatter.date).getTime() : 0;
+  const dateB = b.frontmatter.date ? new Date(b.frontmatter.date).getTime() : 0;
+  return dateB - dateA;
+});
+---
+
+<BaseLayout title="Projects" description="Open source projects and tools for cloud infrastructure, DevOps, and software development.">
+  <section class="projects-page">
+    <div class="container">
+      
+      <header class="page-header animate-in">
+        <h1>Projects</h1>
+        <p>Open source tools and systems I've built. Click on any project to read more about it.</p>
+      </header>
+
+      {sortedProjects.length > 0 ? (
+        <div class="projects-grid">
+          {sortedProjects.map((project) => (
+            <ProjectCard 
+              title={project.frontmatter.title}
+              description={project.frontmatter.description}
+              tags={project.frontmatter.tags}
+              slug={project.file.split('/').pop()?.replace('.md', '') || ''}
+              github={project.frontmatter.github}
+              demo={project.frontmatter.demo}
+            />
+          ))}
+        </div>
+      ) : (
+        <p class="no-projects">No projects yet. Add markdown files to <code>src/pages/projects/</code> to get started.</p>
+      )}
+
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .projects-page {
+    padding: var(--space-3xl) 0;
+  }
+
+  .page-header {
+    margin-bottom: var(--space-2xl);
+    max-width: 540px;
+  }
+
+  .page-header h1 {
+    margin-bottom: var(--space-sm);
+  }
+
+  .page-header p {
+    font-size: clamp(0.9375rem, 2vw, 1.0625rem);
+    color: var(--color-text-secondary);
+    margin: 0;
+  }
+
+  .projects-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-lg);
+  }
+
+  .no-projects {
+    color: var(--color-text-muted);
+  }
+
+  .no-projects code {
+    font-size: 0.875em;
+  }
+
+  @media (max-width: 640px) {
+    .projects-page {
+      padding: var(--space-2xl) 0;
+    }
+
+    .projects-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

@@ -1,0 +1,224 @@
+---
+import BaseLayout from './BaseLayout.astro';
+
+interface Props {
+  frontmatter: {
+    title: string;
+    description: string;
+    pubDate: Date;
+    updatedDate?: Date;
+    tags: string[];
+  };
+}
+
+const { frontmatter } = Astro.props;
+const { title, description, pubDate, updatedDate, tags } = frontmatter;
+
+const formattedDate = new Date(pubDate).toLocaleDateString('en-US', {
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric'
+});
+---
+
+<BaseLayout title={title} description={description}>
+  <article class="post">
+    <div class="container">
+      
+      <header class="post-header">
+        <a href="/blog" class="back-link">← Back to blog</a>
+        
+        <div class="post-meta">
+          <time datetime={new Date(pubDate).toISOString()}>{formattedDate}</time>
+          {updatedDate && (
+            <span class="updated">
+              · Updated {new Date(updatedDate).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}
+            </span>
+          )}
+        </div>
+        
+        <h1 class="post-title">{title}</h1>
+        
+        <div class="post-tags">
+          {tags.map((tag: string) => (
+            <a href={`/blog?tag=${tag.toLowerCase()}`} class="tag">{tag}</a>
+          ))}
+        </div>
+      </header>
+
+      <div class="post-content">
+        <slot />
+      </div>
+
+      <footer class="post-footer">
+        <div class="share-cta">
+          <p>If you found this useful, consider sharing it:</p>
+          <div class="share-links">
+            <a 
+              href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(Astro.url.href)}`}
+              target="_blank"
+              rel="noopener"
+            >
+              LinkedIn
+            </a>
+          </div>
+        </div>
+      </footer>
+
+    </div>
+  </article>
+</BaseLayout>
+
+<style>
+  .post {
+    padding: var(--space-2xl) 0 var(--space-3xl);
+  }
+
+  .post-header {
+    max-width: var(--max-width-prose);
+    margin-bottom: var(--space-2xl);
+  }
+
+  .back-link {
+    display: inline-block;
+    font-size: 0.875rem;
+    color: var(--color-text-muted);
+    margin-bottom: var(--space-lg);
+    transition: color var(--transition-fast);
+  }
+
+  .back-link:hover {
+    color: var(--color-accent);
+  }
+
+  .post-meta {
+    font-family: var(--font-mono);
+    font-size: 0.8125rem;
+    color: var(--color-text-muted);
+    margin-bottom: var(--space-md);
+  }
+
+  .post-title {
+    font-size: clamp(1.5rem, 5vw, 2.25rem);
+    font-weight: 600;
+    line-height: 1.25;
+    margin-bottom: var(--space-lg);
+  }
+
+  .post-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-xs);
+  }
+
+  /* Content Styles */
+  .post-content {
+    max-width: var(--max-width-prose);
+  }
+
+  .post-content :global(h2) {
+    margin-top: var(--space-2xl);
+    margin-bottom: var(--space-md);
+    font-size: clamp(1.25rem, 3vw, 1.375rem);
+  }
+
+  .post-content :global(h3) {
+    margin-top: var(--space-xl);
+    margin-bottom: var(--space-sm);
+    font-size: clamp(1.0625rem, 2.5vw, 1.125rem);
+  }
+
+  .post-content :global(p) {
+    margin-bottom: var(--space-md);
+    line-height: 1.75;
+  }
+
+  .post-content :global(ul),
+  .post-content :global(ol) {
+    margin-bottom: var(--space-md);
+    padding-left: var(--space-lg);
+    color: var(--color-text-secondary);
+  }
+
+  .post-content :global(li) {
+    margin-bottom: var(--space-xs);
+    line-height: 1.7;
+  }
+
+  .post-content :global(blockquote) {
+    margin: var(--space-lg) 0;
+    padding: var(--space-md) var(--space-lg);
+    border-left: 3px solid var(--color-accent);
+    background: var(--color-bg-secondary);
+    border-radius: 0 var(--radius-md) var(--radius-md) 0;
+  }
+
+  .post-content :global(blockquote p) {
+    margin: 0;
+    color: var(--color-text-secondary);
+  }
+
+  .post-content :global(a) {
+    color: var(--color-accent);
+    text-decoration: underline;
+    text-decoration-color: var(--color-accent-subtle);
+    text-underline-offset: 3px;
+  }
+
+  .post-content :global(a:hover) {
+    text-decoration-color: var(--color-accent);
+  }
+
+  .post-content :global(img) {
+    max-width: 100%;
+    height: auto;
+    border-radius: var(--radius-md);
+    margin: var(--space-lg) 0;
+  }
+
+  .post-content :global(hr) {
+    margin: var(--space-2xl) 0;
+    border: none;
+    border-top: 1px solid var(--color-border);
+  }
+
+  .post-content :global(strong) {
+    color: var(--color-text-primary);
+    font-weight: 600;
+  }
+
+  /* Footer */
+  .post-footer {
+    max-width: var(--max-width-prose);
+    margin-top: var(--space-3xl);
+    padding-top: var(--space-xl);
+    border-top: 1px solid var(--color-border);
+  }
+
+  .share-cta p {
+    font-size: 0.9375rem;
+    color: var(--color-text-muted);
+    margin-bottom: var(--space-sm);
+  }
+
+  .share-links {
+    display: flex;
+    gap: var(--space-md);
+  }
+
+  .share-links a {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--color-text-secondary);
+  }
+
+  .share-links a:hover {
+    color: var(--color-accent);
+  }
+
+  @media (max-width: 640px) {
+    .post {
+      padding: var(--space-xl) 0 var(--space-2xl);
+    }
+  }
+</style>

@@ -1,0 +1,225 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+const skills = [
+  { category: "Cloud", items: ["AWS", "Terraform", "Kubernetes"] },
+  { category: "Languages", items: ["Python", "Typescript", "C#", "Go", "C++"] },
+  { category: "Tools", items: ["Docker", "GitHub Actions", "Jenkins", "Grafana", "Proxmox"] },
+  { category: "Certificates", items: ["AWS Solutions Architect Associate", "AWS Certified Cloud Practitioner", "AWS Certified AI Practitioner", "IBM Full Stack Developer Professional"] },
+];
+
+const links = [
+  { label: "GitHub", url: "https://github.com/brandonzazza" },
+  { label: "LinkedIn", url: "https://linkedin.com/in/brandonzazza" },
+  { label: "Email", url: "mailto:brandonzazza@gmail.com" },
+];
+---
+
+<BaseLayout title="About" description="About Brandon Zazza - cloud architect, developer, and technical writer.">
+  <section class="about-page">
+    <div class="container">
+      
+      <header class="page-header animate-in">
+        <h1>About</h1>
+      </header>
+
+      <div class="about-layout">
+        <div class="about-main">
+          <div class="prose">
+            <p class="lead">
+              I'm Brandon, a cloud architect and software developer based in the US. I design and 
+              build infrastructure for companies of all sizes, and I write about what I learn along the way.
+            </p>
+
+            <p>
+              My work focuses on cloud infrastructure, DevOps automation, and building reliable systems 
+              that scale. I've spent the past several years helping teams adopt cloud-native practices, 
+              implement CI/CD pipelines, and improve their operational workflows.
+            </p>
+
+            <p>
+              I started this blog as a way to document solutions to problems I've encountered. If something 
+              took me hours to figure out, maybe I can save someone else that time. My writing covers all sorts 
+              of topics such as AWS, Kubernetes, Terraform, and general software engineering topics.
+            </p>
+
+            <p>
+              When I'm not working, I contribute to open source projects and experiment with new technologies. 
+              I'm particularly interested in infrastructure as code, observability, and developer tooling.
+            </p>
+
+            <h2>Get in touch</h2>
+            <p>
+              I'm always happy to chat about cloud architecture, interesting technical challenges, or 
+              potential collaborations. Feel free to reach out through any of the links below.
+            </p>
+          </div>
+        </div>
+
+        <aside class="about-sidebar">
+          <div class="sidebar-section">
+            <h3>Skills</h3>
+            {skills.map((group) => (
+              <div class="skill-group">
+                <h4>{group.category}</h4>
+                <p>{group.items.join(", ")}</p>
+              </div>
+            ))}
+          </div>
+
+          <div class="sidebar-section">
+            <h3>Connect</h3>
+            <div class="connect-links">
+              {links.map((link) => (
+                <a href={link.url} target={link.url.startsWith('http') ? '_blank' : undefined} rel={link.url.startsWith('http') ? 'noopener' : undefined}>
+                  {link.label}
+                </a>
+              ))}
+            </div>
+          </div>
+        </aside>
+      </div>
+
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .about-page {
+    padding: var(--space-3xl) 0;
+  }
+
+  .page-header {
+    margin-bottom: var(--space-2xl);
+  }
+
+  .about-layout {
+    display: grid;
+    grid-template-columns: 1fr 260px;
+    gap: var(--space-3xl);
+    align-items: start;
+  }
+
+  /* Main Content */
+  .about-main {
+    min-width: 0;
+  }
+
+  .prose {
+    max-width: 600px;
+  }
+
+  .prose .lead {
+    font-size: clamp(1rem, 2vw, 1.125rem);
+    color: var(--color-text-primary);
+    line-height: 1.7;
+  }
+
+  .prose p {
+    line-height: 1.75;
+    margin-bottom: var(--space-lg);
+  }
+
+  .prose h2 {
+    font-size: 1.25rem;
+    margin-top: var(--space-2xl);
+    margin-bottom: var(--space-md);
+  }
+
+  /* Sidebar */
+  .about-sidebar {
+    position: sticky;
+    top: calc(var(--header-height) + var(--space-xl));
+  }
+
+  .sidebar-section {
+    margin-bottom: var(--space-xl);
+    padding-bottom: var(--space-xl);
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .sidebar-section:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+    margin-bottom: 0;
+  }
+
+  .sidebar-section h3 {
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--color-text-muted);
+    margin-bottom: var(--space-md);
+  }
+
+  .skill-group {
+    margin-bottom: var(--space-md);
+  }
+
+  .skill-group:last-child {
+    margin-bottom: 0;
+  }
+
+  .skill-group h4 {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--color-text-primary);
+    margin-bottom: var(--space-xs);
+  }
+
+  .skill-group p {
+    font-size: 0.875rem;
+    color: var(--color-text-secondary);
+    margin: 0;
+    line-height: 1.5;
+  }
+
+  .connect-links {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+  }
+
+  .connect-links a {
+    font-size: 0.9375rem;
+    color: var(--color-text-secondary);
+    transition: color var(--transition-fast);
+  }
+
+  .connect-links a:hover {
+    color: var(--color-accent);
+  }
+
+  @media (max-width: 768px) {
+    .about-page {
+      padding: var(--space-2xl) 0;
+    }
+
+    .about-layout {
+      grid-template-columns: 1fr;
+      gap: var(--space-2xl);
+    }
+
+    .about-sidebar {
+      position: static;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--space-xl);
+      padding-top: var(--space-xl);
+      border-top: 1px solid var(--color-border);
+    }
+
+    .sidebar-section {
+      border-bottom: none;
+      padding-bottom: 0;
+      margin-bottom: 0;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .about-sidebar {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
